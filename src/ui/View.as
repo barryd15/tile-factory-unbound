@@ -208,7 +208,7 @@ package ui
     var wireParent : WireParent;
     var goalPlace : GoalPlace;
     var movieMenu : MovieMenu;
-    var testMenu : TestMenu;
+    public var testMenu : TestMenu;
     var tabs : TabList;
     var scrollMenu : ScrollMenu;
     var systemMenu : ui.menu.SystemMenu;

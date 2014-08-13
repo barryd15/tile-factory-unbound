@@ -14,12 +14,12 @@ package ui.menu
 
   public class TestMenu
   {
-    static var STOP = 0;
-    static var PLAY = 1;
-    static var FAST = 2;
-    static var PAUSE = 3;
-    static var STEP = 4;
-    static var TURBO = 5;
+    public static var STOP = 0;
+    public static var PLAY = 1;
+    public static var FAST = 2;
+    public static var PAUSE = 3;
+    public static var STEP = 4;
+    public static var TURBO = 5;
 
     public function TestMenu(parent : DisplayObjectContainer,
                              newGoalPlace : GoalPlace,
@@ -155,7 +155,7 @@ package ui.menu
       tabs.show();
     }
 
-    function click(choice : int) : void
+    public function click(choice : int) : void
     {
       if (choice == STOP)
       {

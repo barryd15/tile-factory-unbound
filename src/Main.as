@@ -16,6 +16,9 @@ package
   import ui.RegionList;
   import ui.Sound;
   import ui.TilePixel;
+  import ui.menu.TestMenu;
+  import flash.net.URLLoader;
+  import flash.net.URLRequest;
 
   public class Main
   {
@@ -46,9 +49,48 @@ package
         settings = new GameSettings(new lib.Point(25, 25));
         state = new MainMenu(root, settings, beginGame, keyboard);
         resize();
+        
+        processQueryString(parent.loaderInfo.parameters);
       }
     }
-
+    
+    static function processQueryStringCode(code : String, params) : void
+    {
+      settings.setMap(code, SaveLoad.LOAD_ALL);
+      state.cleanup();
+      var game = new Game(root, keyboard, settings, endGame);
+      state = game;
+      resize();
+      switch (params.action.toLowerCase()) {
+        case "play":
+          game.view.testMenu.click(TestMenu.PLAY);
+          break;
+        case "fast":
+          game.view.testMenu.click(TestMenu.FAST);
+          break;
+        case "turbo":
+          game.view.testMenu.click(TestMenu.TURBO);
+          break;
+      }
+    }
+    
+    static function processQueryString(params) : void
+    {
+      //params.code = "eNqVkFFy5DAIRAEhhABZOzUZT/Yae5dU7phLJu18pWq/oq5XILttNWKi14PeH0nxd1H8IYpFK4qqinhWgsVz8IrBBQhwjAP1QA3UQC3UuvbwBXx1gf64qKgsr1V+5Iq9VtjsZjPVKM1ILGKOMYc0VmndUd3CDcD3nNq6iq0clvgmp8VDe5za7dnGeGlCexnvMhvS8SNxFnMRy5JuBY81CR/AZUriSDIWhn903mTT0uYMs4Q/4K8h3wEKZ+DIyD4iDePh9TI8790eyOZttC3SbuB+gfx3wx5ss7ZV6F93vqSs/RK6JwZ8tl174TaqKwsGZHZBKCFJQIRgCyR3z2Lf1S90oY/JGgi9FztGcHcwurqxbuoXvom9cKGFy8NY372jB+4ItxWSLTfofkkhu9sN2iCxK5B6w7hA+aGvQXr2085xOv1Ybx/03/rE+s0zpf35BdajH0Y=";
+      //params.action = "play";
+      if (params.code != undefined) {
+        processQueryStringCode(params.code, params);
+      }
+      else if (params.codeurl != undefined) {
+        var myLoader:URLLoader = new URLLoader();
+        myLoader.addEventListener(Event.COMPLETE, function(e:Event) {
+          var code:String = String(e.currentTarget.data);
+          processQueryStringCode(code, params);
+        });
+        myLoader.load(new URLRequest(params.codeurl));
+      }
+    }
+    
     static function beginGame() : void
     {
       state.cleanup();
