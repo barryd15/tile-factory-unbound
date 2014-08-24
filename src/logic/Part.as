@@ -50,6 +50,11 @@ package logic
 
     static var paintType = [0x0, 0x8, 0x4, 0x2, 0x1];
 
+    static public function isStencil(partType : int) : Boolean
+    {
+      return (partType >= STENCIL_BEGIN && partType < STENCIL_END);
+    }
+
     public static function isItem(type : int) : Boolean
     {
       return type >= TILE;

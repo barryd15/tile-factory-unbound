@@ -22,7 +22,7 @@ package logic.change
       if (model.getMap().canPlacePart(spec.pos))
       {
         model.getMap().untrackAll(spec.pos);
-        var newSprite = new PartView(spec, view.getImages(), view.getAnims());
+        var newSprite = new PartView(spec, view.getImages(), view.getAnims(), model.getStencils());
         var newPart = new logic.Part(spec, newSprite, model.getMap());
         model.addPart(newPart);
         model.getMap().retrackAll(spec.pos);

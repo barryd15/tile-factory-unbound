@@ -1,5 +1,7 @@
 package ui
 {
+  import flash.display.BitmapData;
+  import flash.display.Bitmap;
   import flash.display.DisplayObjectContainer;
   import flash.display.MovieClip;
   import flash.display.Shape;
@@ -43,10 +45,9 @@ package ui
       moveTarget = null;
     }
 
-    public function setModel(newChanges : lib.ChangeList, newMap : logic.Map,
-                             newIsEditor : Boolean,
-                             newSetMenu : Function) : void
+    public function setModel(newChanges : lib.ChangeList, newMap : logic.Map, newIsEditor : Boolean, newSetMenu : Function, newStencils : Array) : void
     {
+      stencils = newStencils;
       changes = newChanges;
       map = newMap;
       isEditor = newIsEditor;
@@ -447,8 +448,26 @@ package ui
       }
       cleanupPlan();
       keyboard.addHandler(hotkey);
-      var linkage = PartView.getLinkage(part.type, part.dir);
-      plan = lib.ui.Image.createClip(linkage);
+
+      if (Part.isStencil(part.type)) {
+        var linkage = PartView.getLinkage(part.type, part.dir);
+        var baseClip = lib.ui.Image.createClip(linkage);
+
+        var data : BitmapData = new BitmapData(TileBit.dim, TileBit.dim, true, 0x00000000);
+        stencils[part.type - Part.STENCIL_BEGIN].drawRegions(data, false);
+
+        var bitmap : Bitmap = new Bitmap(data);
+        bitmap.x = -(TileBit.dim/2);
+        bitmap.y = -(TileBit.dim/2);
+
+        plan = new MovieClip();
+        plan.addChild(baseClip);
+        plan.addChild(bitmap);
+      }
+      else {
+        var linkage = PartView.getLinkage(part.type, part.dir);
+        plan = lib.ui.Image.createClip(linkage);
+      }
       parent.addChild(plan);
 //      plan.visible = false;
       plan.x = x;
@@ -514,6 +533,7 @@ package ui
     var shouldMove : Boolean;
     var moveTarget : Part;
     var setMenu : Function;
+    var stencils : Array;
 
     static var okColor : int = 0x33ff33;
     static var badColor : int = 0xff3333;

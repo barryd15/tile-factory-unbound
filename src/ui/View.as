@@ -183,7 +183,7 @@ package ui
                              stencils : Array)
     {
       settings = newSettings;
-      partPlace.setModel(changes, map, settings.isEditor(), tabs.setMenu);
+      partPlace.setModel(changes, map, settings.isEditor(), tabs.setMenu, settings.getStencils());
       wirePlace.setModel(changes, map, tabs.getWireText(), wireParent);
       movieMenu.setModel(settings, endGame, saveMap);
       testMenu.setModel(changes, partPlace, settings, saveMap);

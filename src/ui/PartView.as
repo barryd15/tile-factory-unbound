@@ -15,11 +15,10 @@ package ui
 
   public class PartView
   {
-    public function PartView(spec : PartSpec,
-                             newImages : lib.ui.ImageList,
-                             newAnims : AnimList) : void
+    public function PartView(spec : PartSpec, newImages : lib.ui.ImageList, newAnims : AnimList, newStencils : Array) : void
     {
       type = spec.type;
+      stencils = newStencils;
       images = newImages;
       anims = newAnims;
       updateDir(spec.dir);
@@ -80,7 +79,15 @@ package ui
       }
       if (part == null)
       {
-        part = new lib.ui.Image(makeType(newDir));
+        if (Part.isStencil(type)) {
+          var imageRegion : ImageRegion = new ui.ImageRegion(ImageConfig.item);
+          imageRegion.setFrame(type - Part.STENCIL_BEGIN + Item.STENCIL_BEGIN);
+          imageRegion.setRegion(stencils[type - Part.STENCIL_BEGIN]);
+          part = imageRegion;
+        }
+        else {
+          part = new lib.ui.Image(makeType(newDir));
+        }
         images.add(part);
         if (partAnim != null)
         {
@@ -116,7 +123,7 @@ package ui
       {
         if (power)
         {
-          part.setFrame(2);
+          if (!Part.isStencil(type)) part.setFrame(2);
           if (type == Part.CONVEYER)
           {
             animate(null);
@@ -124,7 +131,7 @@ package ui
         }
         else
         {
-          part.setFrame(1);
+          if (!Part.isStencil(type)) part.setFrame(1);
         }
         if (partAnim != null)
         {
@@ -215,6 +222,7 @@ package ui
     }
 
     var type : int;
+    var stencils : Array;
     var images : lib.ui.ImageList;
     var part : lib.ui.Image;
     var partAnim : Anim;
